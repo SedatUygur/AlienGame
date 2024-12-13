@@ -5,6 +5,7 @@ import Sky from './Sky';
 import Ground from './Ground';
 import CannonBase from './CannonBase';
 import CannonPipe from './CannonPipe';
+import CannonBall from "./CannonBall";
 
 const Canvas = (props) => {
   const viewBox = [window.innerWidth / -2, 100 - window.innerHeight, window.innerWidth, window.innerHeight];
@@ -20,6 +21,7 @@ const Canvas = (props) => {
       <Ground />
       <CannonPipe rotation={props.angle} />
       <CannonBase />
+      <CannonBall position={{x: 0, y: -100}}/>
     </svg>
   );
 };

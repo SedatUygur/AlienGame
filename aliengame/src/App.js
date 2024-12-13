@@ -4,11 +4,6 @@ import Canvas from './components/Canvas';
 import { getCanvasPosition } from './utils/formulas';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.trackMouse = this.trackMouse.bind(this);
-    this.componentDidMount = this.componentDidMount.bind(this);
-  }
 
   componentDidMount() {
     const self = this;
