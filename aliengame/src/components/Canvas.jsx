@@ -11,11 +11,21 @@ import FlyingObject from './FlyingObject';
 //import Heart from './Heart';
 import StartGame from './StartGame';
 import Title from './Title';
-import LoginButton from './LoginButton';
+//import LoginButton from './LoginButton';
+import Leaderboard from './Leaderboard';
 
 const Canvas = (props) => {
   const gameHeight = 1200;
   const viewBox = [window.innerWidth / -2, 100 - gameHeight, window.innerWidth, gameHeight];
+
+  const leaderboard = [
+    { id: 'd4', maxScore: 235, name: 'React', picture: 'https://unavatar.io/x/reactjs', },
+    { id: 'a1', maxScore: 82, name: 'Redux.io', picture: 'https://unavatar.io/x/ReduxFramework', },
+    { id: 'c3', maxScore: 99, name: 'Auth0', picture: 'https://unavatar.io/x/auth0', },
+    { id: 'b2', maxScore: 129, name: 'ReactDOM', picture: 'https://unavatar.io/x/ReactDOM', },
+    { id: 'e5', maxScore: 34, name: 'React & Redux', picture: 'https://unavatar.io/x/React_Rd', },
+    { id: 'f6', maxScore: 153, name: 'Web Vitals', picture: 'https://unavatar.io/x/WebVitals', },
+  ];
 
   return (
     <svg
@@ -38,7 +48,7 @@ const Canvas = (props) => {
       <g>
         <StartGame onClick={() => props.startGame()} />
         <Title />
-        <LoginButton />
+        <Leaderboard currentUserId={'d4'} leaderboard={leaderboard} />
       </g>
       }
       { props.gameState.flyingObjects.map(flyingObject => (
