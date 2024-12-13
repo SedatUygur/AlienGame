@@ -48,7 +48,7 @@ const Canvas = (props) => {
       <g>
         <StartGame onClick={() => props.startGame()} />
         <Title />
-        <Leaderboard currentUserId={'d4'} leaderboard={leaderboard} />
+        <Leaderboard currentPlayer={leaderboard[0]} leaderboard={leaderboard} />
       </g>
       }
       { props.gameState.flyingObjects.map(flyingObject => (
