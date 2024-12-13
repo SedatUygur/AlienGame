@@ -11,6 +11,7 @@ import FlyingObject from './FlyingObject';
 //import Heart from './Heart';
 import StartGame from './StartGame';
 import Title from './Title';
+import LoginButton from './LoginButton';
 
 const Canvas = (props) => {
   const gameHeight = 1200;
@@ -37,6 +38,7 @@ const Canvas = (props) => {
       <g>
         <StartGame onClick={() => props.startGame()} />
         <Title />
+        <LoginButton />
       </g>
       }
       { props.gameState.flyingObjects.map(flyingObject => (
