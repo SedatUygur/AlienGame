@@ -26,7 +26,7 @@ export const calculateAngle = (x1, y1, x2, y2) => {
 };
 export const getCanvasPosition = (event) => {
   // mouse position on auto-scaling canvas
-  const svg = document.getElementById('aliens-go-home-canvas');
+  const svg = document.getElementById('alien-game-canvas');
   const point = svg.createSVGPoint();
   point.x = event.clientX;
   point.y = event.clientY;
