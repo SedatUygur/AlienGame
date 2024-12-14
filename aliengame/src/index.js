@@ -26,7 +26,9 @@ root.render(
     domain="dev-6aiprmtpfbbrrq7n.eu.auth0.com"
     clientId="Et5ewQTuALzBdTgu0brEu15dhi0y0HV0"
     authorizationParams={{
+      audience: "https://dev-6aiprmtpfbbrrq7n.eu.auth0.com/api/v2/",
       redirect_uri: window.location.origin,
+      scope: 'openid profile manage:points read:current_user update:current_user_metadata',
     }}
   >
     <Provider store={store}>

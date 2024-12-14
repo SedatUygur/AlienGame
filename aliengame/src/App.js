@@ -1,12 +1,59 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import io from 'socket.io-client';
+import { withAuth0 } from '@auth0/auth0-react';
 import Canvas from './components/Canvas';
 import { getCanvasPosition } from './utils/formulas';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.trackMouse = this.trackMouse.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
+  }
 
-  componentDidMount() {
+  async componentDidMount() {
     const self = this;
+    const domain = "dev-6aiprmtpfbbrrq7n.eu.auth0.com";
+    const { isAuthenticated, getAccessTokenSilently, user } = this.props.auth0;
+    if (isAuthenticated) {
+      const accessToken = await getAccessTokenSilently({
+        authorizationParams: {
+          audience: `https://${domain}/api/v2/`,
+          scope: "read:current_user",
+        },
+      });
+      const currentPlayer = {
+        id: user.sub,
+        maxScore: 0,
+        name: user.name,
+        picture: user.picture,
+      };
+      this.props.loggedIn(currentPlayer);
+      const socket = io('http://localhost:3001', {
+        query: `token=${accessToken}`,
+      });
+      let emitted = false;
+      socket.on('players', (players) => {
+        this.props.leaderboardLoaded(players);
+        if (emitted) return;
+        socket.emit('new-max-score', {
+          id: user.sub,
+          maxScore: 120,
+          name: user.name,
+          picture: user.picture,
+        });
+        emitted = true;
+        setTimeout(() => {
+          socket.emit('new-max-score', {
+            id: user.sub,
+            maxScore: 222,
+            name: user.name,
+            picture: user.picture,
+          });
+        }, 5000);
+      });
+    }
 
     setInterval(() => {
       self.props.moveObjects(self.canvasMousePosition);
@@ -29,7 +76,9 @@ class App extends Component {
     return (
       <Canvas
         angle={this.props.angle}
+        currentPlayer={this.props.currentPlayer}
         gameState={this.props.gameState}
+        players={this.props.players}
         startGame={this.props.startGame}
         trackMouse={event => (this.trackMouse(event))}
       />
@@ -39,6 +88,12 @@ class App extends Component {
 
 App.propTypes = {
   angle: PropTypes.number.isRequired,
+  currentPlayer: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    maxScore: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    picture: PropTypes.string.isRequired,
+  }),
   flyingObjects: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
     position: PropTypes.shape({
@@ -51,8 +106,21 @@ App.propTypes = {
     lives: PropTypes.number.isRequired,
     started: PropTypes.bool.isRequired,
   }).isRequired,
+  leaderboardLoaded: PropTypes.func.isRequired,
+  loggedIn: PropTypes.func.isRequired,
   moveObjects: PropTypes.func.isRequired,
+  players: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    maxScore: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    picture: PropTypes.string.isRequired,
+  })),
   startGame: PropTypes.func.isRequired,
 };
 
-export default App;
+App.defaultProps = {
+  currentPlayer: null,
+  players: null,
+};
+
+export default withAuth0(App);

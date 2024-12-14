@@ -1,9 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import LoginButton from './LoginButton';
+import LogoutButton from './LogoutButton';
+import { useAuth0 } from '@auth0/auth0-react';
 import Rank from "./Rank";
 
 const Leaderboard = (props) => {
+  const { isAuthenticated } = useAuth0();
+
   const leaderboardTitle = {
     fontFamily: '"Joti One", cursive',
     fontSize: 50,
@@ -47,7 +51,7 @@ const Leaderboard = (props) => {
         })
       }
       {
-        ! props.currentPlayer && <LoginButton authenticate={props.authenticate} />
+        isAuthenticated ? <LogoutButton authenticate={props.authenticate} /> : <LoginButton authenticate={props.authenticate} />
       }
     </g>
   );

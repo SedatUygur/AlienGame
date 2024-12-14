@@ -18,14 +18,14 @@ const Canvas = (props) => {
   const gameHeight = 1200;
   const viewBox = [window.innerWidth / -2, 100 - gameHeight, window.innerWidth, gameHeight];
 
-  const leaderboard = [
+  /*const leaderboard = [
     { id: 'd4', maxScore: 235, name: 'React', picture: 'https://unavatar.io/x/reactjs', },
     { id: 'a1', maxScore: 82, name: 'Redux.io', picture: 'https://unavatar.io/x/ReduxFramework', },
     { id: 'c3', maxScore: 99, name: 'Auth0', picture: 'https://unavatar.io/x/auth0', },
     { id: 'b2', maxScore: 129, name: 'ReactDOM', picture: 'https://unavatar.io/x/ReactDOM', },
     { id: 'e5', maxScore: 34, name: 'React & Redux', picture: 'https://unavatar.io/x/React_Rd', },
     { id: 'f6', maxScore: 153, name: 'Web Vitals', picture: 'https://unavatar.io/x/WebVitals', },
-  ];
+  ];*/
 
   return (
     <svg
@@ -48,7 +48,7 @@ const Canvas = (props) => {
       <g>
         <StartGame onClick={() => props.startGame()} />
         <Title />
-        <Leaderboard currentPlayer={leaderboard[0]} leaderboard={leaderboard} />
+        <Leaderboard currentPlayer={props.currentPlayer} leaderboard={props.players} />
       </g>
       }
       { props.gameState.flyingObjects.map(flyingObject => (
@@ -63,13 +63,30 @@ const Canvas = (props) => {
 
 Canvas.propTypes = {
   angle: PropTypes.number.isRequired,
+  currentPlayer: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    maxScore: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    picture: PropTypes.string.isRequired,
+  }),
   gameState: PropTypes.shape({
     started: PropTypes.bool.isRequired,
     kills: PropTypes.number.isRequired,
     lives: PropTypes.number.isRequired,
   }).isRequired,
+  players: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    maxScore: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    picture: PropTypes.string.isRequired,
+  })),
   startGame: PropTypes.func.isRequired,
   trackMouse: PropTypes.func.isRequired,
+};
+
+Canvas.defaultProps = {
+  currentPlayer: null,
+  players: null,
 };
 
 export default Canvas;

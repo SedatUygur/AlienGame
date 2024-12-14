@@ -3,8 +3,6 @@ import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
-//const jwt = require('jsonwebtoken');
-//const jwksClient = require('jwks-rsa');
 
 const app = express();
 const server = createServer(app);
@@ -64,6 +62,6 @@ io.on('connection', (socket) => {
   socket.on('new-max-score', newMaxScoreHandler);
 });
 
-server.listen(3000, () => {
-  console.log('server running at http://localhost:3000');
+server.listen(3001, () => {
+  console.log('server running at http://localhost:3001');
 });
