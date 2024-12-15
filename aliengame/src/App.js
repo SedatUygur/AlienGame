@@ -10,6 +10,7 @@ class App extends Component {
     super(props);
     this.trackMouse = this.trackMouse.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
+    this.shoot = this.shoot.bind(this);
   }
 
   async componentDidMount() {
@@ -68,6 +69,10 @@ class App extends Component {
     window.onresize();
   }
 
+  shoot() {
+    this.props.shoot(this.canvasMousePosition);
+  }
+
   trackMouse(event) {
     this.canvasMousePosition = getCanvasPosition(event);
   }
@@ -79,6 +84,7 @@ class App extends Component {
         currentPlayer={this.props.currentPlayer}
         gameState={this.props.gameState}
         players={this.props.players}
+        shoot={this.shoot}
         startGame={this.props.startGame}
         trackMouse={event => (this.trackMouse(event))}
       />
@@ -115,6 +121,7 @@ App.propTypes = {
     name: PropTypes.string.isRequired,
     picture: PropTypes.string.isRequired,
   })),
+  shoot: PropTypes.func.isRequired,
   startGame: PropTypes.func.isRequired,
 };
 

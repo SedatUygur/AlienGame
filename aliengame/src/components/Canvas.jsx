@@ -5,7 +5,7 @@ import Sky from './Sky';
 import Ground from './Ground';
 import CannonBase from './CannonBase';
 import CannonPipe from './CannonPipe';
-//import CannonBall from "./CannonBall";
+import CannonBall from "./CannonBall";
 import CurrentScore from './CurrentScore';
 import FlyingObject from './FlyingObject';
 //import Heart from './Heart';
@@ -18,18 +18,10 @@ const Canvas = (props) => {
   const gameHeight = 1200;
   const viewBox = [window.innerWidth / -2, 100 - gameHeight, window.innerWidth, gameHeight];
 
-  /*const leaderboard = [
-    { id: 'd4', maxScore: 235, name: 'React', picture: 'https://unavatar.io/x/reactjs', },
-    { id: 'a1', maxScore: 82, name: 'Redux.io', picture: 'https://unavatar.io/x/ReduxFramework', },
-    { id: 'c3', maxScore: 99, name: 'Auth0', picture: 'https://unavatar.io/x/auth0', },
-    { id: 'b2', maxScore: 129, name: 'ReactDOM', picture: 'https://unavatar.io/x/ReactDOM', },
-    { id: 'e5', maxScore: 34, name: 'React & Redux', picture: 'https://unavatar.io/x/React_Rd', },
-    { id: 'f6', maxScore: 153, name: 'Web Vitals', picture: 'https://unavatar.io/x/WebVitals', },
-  ];*/
-
   return (
     <svg
       id="alien-game-canvas"
+      onClick={props.shoot}
       onMouseMove={props.trackMouse}
       preserveAspectRatio="xMaxYMax none"
       viewBox={viewBox}
@@ -41,6 +33,12 @@ const Canvas = (props) => {
       </defs>
       <Sky />
       <Ground />
+      {props.gameState.cannonBalls.map(cannonBall => (
+        <CannonBall
+          key={cannonBall.id}
+          position={cannonBall.position}
+        />
+      ))}
       <CannonPipe rotation={props.angle} />
       <CannonBase />
       <CurrentScore score={0} />
@@ -80,6 +78,7 @@ Canvas.propTypes = {
     name: PropTypes.string.isRequired,
     picture: PropTypes.string.isRequired,
   })),
+  shoot: PropTypes.func.isRequired,
   startGame: PropTypes.func.isRequired,
   trackMouse: PropTypes.func.isRequired,
 };
