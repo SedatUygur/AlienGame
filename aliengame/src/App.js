@@ -8,13 +8,12 @@ import { getCanvasPosition } from './utils/formulas';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.trackMouse = this.trackMouse.bind(this);
-    this.componentDidMount = this.componentDidMount.bind(this);
+    this.currentPlayer = null;
+    this.socket = null;
     this.shoot = this.shoot.bind(this);
   }
 
   async componentDidMount() {
-    const self = this;
     const domain = "dev-6aiprmtpfbbrrq7n.eu.auth0.com";
     const { isAuthenticated, getAccessTokenSilently, user } = this.props.auth0;
     if (isAuthenticated) {
@@ -24,40 +23,29 @@ class App extends Component {
           scope: "read:current_user",
         },
       });
-      const currentPlayer = {
+      this.currentPlayer = {
         id: user.sub,
         maxScore: 0,
         name: user.name,
         picture: user.picture,
       };
-      this.props.loggedIn(currentPlayer);
-      const socket = io('http://localhost:3001', {
+      this.props.loggedIn(this.currentPlayer);
+      this.socket = io('http://localhost:3001', {
         query: `token=${accessToken}`,
       });
-      let emitted = false;
-      socket.on('players', (players) => {
+
+      this.socket.on('players', (players) => {
         this.props.leaderboardLoaded(players);
-        if (emitted) return;
-        socket.emit('new-max-score', {
-          id: user.sub,
-          maxScore: 120,
-          name: user.name,
-          picture: user.picture,
+        players.forEach((player) => {
+          if (player.id === this.currentPlayer.id) {
+            this.currentPlayer.maxScore = player.maxScore;
+          }
         });
-        emitted = true;
-        setTimeout(() => {
-          socket.emit('new-max-score', {
-            id: user.sub,
-            maxScore: 222,
-            name: user.name,
-            picture: user.picture,
-          });
-        }, 5000);
       });
     }
 
     setInterval(() => {
-      self.props.moveObjects(self.canvasMousePosition);
+      this.props.moveObjects(this.canvasMousePosition);
     }, 10);
 
     window.onresize = () => {
@@ -67,6 +55,19 @@ class App extends Component {
     };
 
     window.onresize();
+  }
+
+  componentDidUpdate(nextProps, prevState) {
+    if (!nextProps.gameState.started && this.props.gameState.started) {
+      if (!this.currentPlayer) return;
+
+      if (this.currentPlayer.maxScore < this.props.gameState.kills) {
+        this.socket.emit('new-max-score', {
+          ...this.currentPlayer,
+          maxScore: this.props.gameState.kills,
+        });
+      }
+    }
   }
 
   shoot() {
