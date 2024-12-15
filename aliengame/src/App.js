@@ -4,6 +4,9 @@ import io from 'socket.io-client';
 import { withAuth0 } from '@auth0/auth0-react';
 import Canvas from './components/Canvas';
 import { getCanvasPosition } from './utils/formulas';
+import { getConfig } from "./config";
+
+const config = getConfig();
 
 class App extends Component {
   constructor(props) {
@@ -14,13 +17,12 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    const domain = "dev-6aiprmtpfbbrrq7n.eu.auth0.com";
     const { isAuthenticated, getAccessTokenSilently, user } = this.props.auth0;
     if (isAuthenticated) {
       const accessToken = await getAccessTokenSilently({
         authorizationParams: {
-          audience: `https://${domain}/api/v2/`,
-          scope: "read:current_user",
+          audience: config.audience,
+          scope: config.scopeForAccessToken,
         },
       });
       this.currentPlayer = {

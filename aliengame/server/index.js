@@ -9,7 +9,7 @@ const server = createServer(app);
 const io = new Server(server);
 
 const client = jwksClient({
-    jwksUri: 'https://dev-6aiprmtpfbbrrq7n.eu.auth0.com/.well-known/jwks.json',
+    jwksUri: process.env.jwksUri,
     requestHeaders: {}, // Optional
     timeout: 30000 // Defaults to 30s
 });

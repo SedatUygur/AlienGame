@@ -8,7 +8,9 @@ import './index.css';
 import Game from './containers/Game';
 import reducer from './reducers';
 import reportWebVitals from './reportWebVitals';
+import { getConfig } from "./config";
 
+const config = getConfig();
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const store = configureStore({ 
   reducer,
@@ -16,19 +18,15 @@ const store = configureStore({
     serializableCheck: false,
   }),
 })
-/*const store = createStore(
-  reducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-);*/
 
 root.render(
   <Auth0Provider
-    domain="dev-6aiprmtpfbbrrq7n.eu.auth0.com"
-    clientId="Et5ewQTuALzBdTgu0brEu15dhi0y0HV0"
+    domain={config.domain}
+    clientId={config.clientId}
     authorizationParams={{
-      audience: "https://dev-6aiprmtpfbbrrq7n.eu.auth0.com/api/v2/",
+      audience: config.audience,
       redirect_uri: window.location.origin,
-      scope: 'openid profile manage:points read:current_user update:current_user_metadata',
+      scope: config.scope,
     }}
   >
     <Provider store={store}>

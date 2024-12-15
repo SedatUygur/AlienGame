@@ -1,0 +1,7 @@
+{
+    "audience": "https://your-domain/api/v2/",
+    "clientId": "your-clientId",
+    "domain": "your-domain",
+    "jwksUri": "https://your-domain/.well-known/jwks.json",
+    "scope": "openid profile manage:points read:current_user update:current_user_metadata"
+}
