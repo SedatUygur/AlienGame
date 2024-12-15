@@ -24,6 +24,11 @@ export const calculateNextPosition = (x, y, angle, divisor = 300) => {
   }
 };
 
+export const checkCollision = (rectA, rectB) => (
+  rectA.x1 < rectB.x2 && rectA.x2 > rectB.x1 &&
+  rectA.y1 < rectB.y2 && rectA.y2 > rectB.y1
+);
+
 export const getCanvasPosition = (event) => {
   // mouse position on auto-scaling canvas
   const svg = document.getElementById('alien-game-canvas');
